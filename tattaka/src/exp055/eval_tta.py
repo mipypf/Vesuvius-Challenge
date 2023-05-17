@@ -25,7 +25,6 @@ resnetrs50_split3d5x7csn_mixup_ep25/fold3: score: 0.6890548603037959, threshold:
 resnetrs50_split3d3x9csn_l6_mixup_ep25/fold1: score: 0.6630090422850091, threshold: 0.8995117187500009
 resnetrs50_split3d3x9csn_l6_mixup_ep25/fold3: score: 0.6952362092376995, threshold: 0.9250000000000009
 
-
 resnetrs50_split3d5x7csn_mixup_ep30/fold1: score: 0.661666662175347, threshold: 0.8962890625000011
 resnetrs50_split3d5x7csn_mixup_ep30/fold2: score: 0.676702739882396, threshold: 0.896484375000001
 resnetrs50_split3d5x7csn_mixup_ep30/fold3: score: 0.6893507333288211, threshold: 0.924218750000001
@@ -44,9 +43,12 @@ convnext_tiny_split3d5x7csn_mixup_ep30/fold3: score: 0.6901466376748603, thresho
 convnext_tiny_split3d5x7csn_mixup_ep30/fold4: score: 0.78872785984954, threshold: 0.874414062500001
 convnext_tiny_split3d5x7csn_mixup_ep30/fold5: score: 0.7579170092311271, threshold: 0.8947265625000009
 
-convnext_tiny_split3d3x9csn_l6_mixup_ep30/fold1: score: 0.6471612442084146, threshold: 0.8991210937500008
-convnext_tiny_split3d3x9csn_l6_mixup_ep30/fold2: score: 0.7281777218567798, threshold: 0.9003906250000009
-convnext_tiny_split3d3x9csn_l6_mixup_ep30/fold3: score: 0.7020977221584417, threshold: 0.931640625000001
+convnext_tiny_split3d3x9csn_l6_mixup_ep30/fold1: score: 0.6609598722175213, threshold: 0.8945312500000009
+convnext_tiny_split3d3x9csn_l6_mixup_ep30/fold2: score: 0.7103085807166868, threshold: 0.8946289062500009
+
+# convnext_tiny_split3d3x9csn_l6_mixup_ep30/fold1: score: 0.6471612442084146, threshold: 0.8991210937500008
+# convnext_tiny_split3d3x9csn_l6_mixup_ep30/fold2: score: 0.7281777218567798, threshold: 0.9003906250000009
+# convnext_tiny_split3d3x9csn_l6_mixup_ep30/fold3: score: 0.7020977221584417, threshold: 0.931640625000001
 
 ####### w/o postprocess ##########
 """
@@ -134,10 +136,6 @@ def main(args):
             "flip_v",
             "flip_h",
             "flip_vh",
-            "flip_c",
-            "flip_vc",
-            "flip_hc",
-            "flip_vhc",
         ]
         for batch in tqdm(dataloader):
             volume, _, x, y = batch
@@ -148,14 +146,6 @@ def main(args):
                     volume[i] = volume[i].flip(2)
                 elif i % len(tta_set) == 3:
                     volume[i] = volume[i].flip(1).flip(2)
-                elif i % len(tta_set) == 4:
-                    volume[i] = volume[i].flip(0)
-                elif i % len(tta_set) == 5:
-                    volume[i] = volume[i].flip(0).flip(1)
-                elif i % len(tta_set) == 6:
-                    volume[i] = volume[i].flip(0).flip(2)
-                elif i % len(tta_set) == 7:
-                    volume[i] = volume[i].flip(0).flip(1).flip(2)
 
             volume = volume.to(device)
             with torch.no_grad():
@@ -168,14 +158,6 @@ def main(args):
                     pred_batch[i] = pred_batch[i].flip(2)
                 elif i % len(tta_set) == 3:
                     pred_batch[i] = pred_batch[i].flip(1).flip(2)
-                elif i % len(tta_set) == 4:
-                    pred_batch[i] = pred_batch[i].flip(0)
-                elif i % len(tta_set) == 5:
-                    pred_batch[i] = pred_batch[i].flip(0).flip(1)
-                elif i % len(tta_set) == 6:
-                    pred_batch[i] = pred_batch[i].flip(0).flip(2)
-                elif i % len(tta_set) == 7:
-                    pred_batch[i] = pred_batch[i].flip(0).flip(1).flip(2)
 
             pred_batch = F.interpolate(
                 pred_batch.detach().to(torch.float32).cpu(),
