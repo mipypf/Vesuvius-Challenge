@@ -18,7 +18,37 @@ from train import (
 )
 
 """
+####### w/o postprocess ##########
+resnetrs50_split3d5x7csn_mixup_ep25/fold1: score: 0.6575029309805652, threshold: 0.896093750000001
+resnetrs50_split3d5x7csn_mixup_ep25/fold3: score: 0.6890548603037959, threshold: 0.923925781250001
 
+resnetrs50_split3d3x9csn_l6_mixup_ep25/fold1: score: 0.6630090422850091, threshold: 0.8995117187500009
+resnetrs50_split3d3x9csn_l6_mixup_ep25/fold3: score: 0.6952362092376995, threshold: 0.9250000000000009
+
+
+resnetrs50_split3d5x7csn_mixup_ep30/fold1: score: 0.661666662175347, threshold: 0.8962890625000011
+resnetrs50_split3d5x7csn_mixup_ep30/fold2: score: 0.676702739882396, threshold: 0.896484375000001
+resnetrs50_split3d5x7csn_mixup_ep30/fold3: score: 0.6893507333288211, threshold: 0.924218750000001
+resnetrs50_split3d5x7csn_mixup_ep30/fold4: score: 0.7777119023923392, threshold: 0.8797851562500009
+resnetrs50_split3d5x7csn_mixup_ep30/fold5: score: 0.7455737000141693, threshold: 0.8949218750000009
+
+resnetrs50_split3d3x9csn_l6_mixup_ep30/fold1: score: 0.647394759423847, threshold: 0.8941406250000009
+resnetrs50_split3d3x9csn_l6_mixup_ep30/fold2: score: 0.7227190397501271, threshold: 0.897070312500001
+resnetrs50_split3d3x9csn_l6_mixup_ep30/fold3: score: 0.711266574379027, threshold: 0.9267578125000009
+resnetrs50_split3d3x9csn_l6_mixup_ep30/fold4: score: 0.7807569334254353, threshold: 0.877734375000001
+resnetrs50_split3d3x9csn_l6_mixup_ep30/fold5: score: 0.7286967877089129, threshold: 0.893066406250001
+
+convnext_tiny_split3d5x7csn_mixup_ep30/fold1: score: 0.6480484068230761, threshold: 0.8995117187500009
+convnext_tiny_split3d5x7csn_mixup_ep30/fold2: score: 0.7349025767720183, threshold: 0.901367187500001
+convnext_tiny_split3d5x7csn_mixup_ep30/fold3: score: 0.6901466376748603, threshold: 0.930175781250001
+convnext_tiny_split3d5x7csn_mixup_ep30/fold4: score: 0.78872785984954, threshold: 0.874414062500001
+convnext_tiny_split3d5x7csn_mixup_ep30/fold5: score: 0.7579170092311271, threshold: 0.8947265625000009
+
+convnext_tiny_split3d3x9csn_l6_mixup_ep30/fold1: score: 0.6471612442084146, threshold: 0.8991210937500008
+convnext_tiny_split3d3x9csn_l6_mixup_ep30/fold2: score: 0.7281777218567798, threshold: 0.9003906250000009
+convnext_tiny_split3d3x9csn_l6_mixup_ep30/fold3: score: 0.7020977221584417, threshold: 0.931640625000001
+
+####### w/o postprocess ##########
 """
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 

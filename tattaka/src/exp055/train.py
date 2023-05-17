@@ -459,10 +459,11 @@ class InkDetModel(nn.Module):
             drop_rate=drop_rate,
             drop_path_rate=drop_path_rate,
         )
+        self.output_fmt = getattr(self.encoder, "output_fmt", "NHCW")
         self.in_chans = in_chans
-        channels = self.encoder.feature_info.channels()
+        num_features = self.encoder.feature_info.channels()[-1]
         self.conv_proj = nn.Sequential(
-            nn.Conv2d(channels[-1], 512, 1, stride=1),
+            nn.Conv2d(num_features, 512, 1, stride=1),
             nn.BatchNorm2d(512),
             nn.ReLU(),
         )
@@ -524,7 +525,10 @@ class InkDetModel(nn.Module):
             for i, ca in enumerate(ch_arr):
                 img[i] = img[i, :, ca]
         img = img.reshape(bs * groups_3d, self.in_chans, h, w)
-        img_feat = self.conv_proj(self.encoder(img)[-1])  # (bs * groups_3d, 512, h, w)
+        img_feat = self.encoder(img)[-1]
+        if self.output_fmt == "NHWC":
+            img_feat = img_feat.permute(0, 3, 1, 2).contiguous()
+        img_feat = self.conv_proj(img_feat)  # (bs * groups_3d, 512, h, w)
         _, ch, h, w = img_feat.shape
         img_feat = img_feat.reshape(bs, groups_3d, ch, h, w).transpose(
             1, 2

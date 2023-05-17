@@ -25,20 +25,30 @@ resnetrs50_split3d3x9csn_l6_mixup_ep25/fold3: score: 0.704683504349116, threshol
 
 
 resnetrs50_split3d5x7csn_mixup_ep30/fold1: score: 0.6671564373797446, threshold: 0.8962890625000011, min_size: 0.745(30519.26999999999)
+resnetrs50_split3d5x7csn_mixup_ep30/fold2: score: 0.678304313318956, threshold: 0.896484375000001, min_size: 0.355(5994.114999999996)
+resnetrs50_split3d5x7csn_mixup_ep30/fold3: score: 0.7030810775863997, threshold: 0.924218750000001, min_size: 0.58(16610.839999999986)
+resnetrs50_split3d5x7csn_mixup_ep30/fold4: score: 0.7784456883706149, threshold: 0.8797851562500009, min_size: 0.33(6437.6)
+resnetrs50_split3d5x7csn_mixup_ep30/fold5: score: 0.7536152558867597, threshold: 0.8949218750000009, min_size: 0.355(7561.074999999996)
+
+resnetrs50_split3d3x9csn_l6_mixup_ep30/fold1: score: 0.6538946386915833, threshold: 0.8941406250000009, min_size: 0.47(12259.330000000002)
+resnetrs50_split3d3x9csn_l6_mixup_ep30/fold2: score: 0.7243170839086515, threshold: 0.897070312500001, min_size: 0.27(4723.37)
+resnetrs50_split3d3x9csn_l6_mixup_ep30/fold3: score: 0.7143310529701021, threshold: 0.9267578125000009, min_size: 0.495(13476.43)
+resnetrs50_split3d3x9csn_l6_mixup_ep30/fold4: score: 0.7823169450858705, threshold: 0.877734375000001, min_size: 0.465(10454.08)
+resnetrs50_split3d3x9csn_l6_mixup_ep30/fold5: score: 0.7343272916974329, threshold: 0.893066406250001, min_size: 0.345(12067.800000000001)
+
+convnext_tiny_split3d5x7csn_mixup_ep30/fold1: score: 0.6638423556236058, threshold: 0.8995117187500009, min_size: 0.69(16895.930000000004)
+convnext_tiny_split3d5x7csn_mixup_ep30/fold2: score: 0.7389049718916035, threshold: 0.901367187500001, min_size: 0.46(8101.840000000004)
+convnext_tiny_split3d5x7csn_mixup_ep30/fold3: score: 0.7024514516189556, threshold: 0.930175781250001, min_size: 0.5700000000000001(14466.480000000018)
+convnext_tiny_split3d5x7csn_mixup_ep30/fold4: score: 0.7904894346755391, threshold: 0.874414062500001, min_size: 0.35000000000000003(5656.2500000000055)
+convnext_tiny_split3d5x7csn_mixup_ep30/fold5: score: 0.7650068226825343, threshold: 0.8947265625000009, min_size: 0.39(14460.38)
+
+convnext_tiny_split3d3x9csn_l6_mixup_ep30/fold1: score: 0.6671244783471034, threshold: 0.8991210937500008, min_size: 0.59(13322.14)
+convnext_tiny_split3d3x9csn_l6_mixup_ep30/fold2: score: 0.7315353598716688, threshold: 0.9003906250000009, min_size: 0.43(15088.25)
+convnext_tiny_split3d3x9csn_l6_mixup_ep30/fold3: score: 0.712144885193615, threshold: 0.931640625000001, min_size: 0.58(13269.399999999998)
+
 
 ####### w/ postprocess ##########
 
-####### w/o postprocess ##########
-resnetrs50_split3d5x7csn_mixup_ep25/fold1: score: 0.6575029309805652, threshold: 0.896093750000001
-resnetrs50_split3d5x7csn_mixup_ep25/fold3: score: 0.6890548603037959, threshold: 0.923925781250001
-
-resnetrs50_split3d3x9csn_l6_mixup_ep25/fold1: score: 0.6630090422850091, threshold: 0.8995117187500009
-resnetrs50_split3d3x9csn_l6_mixup_ep25/fold3: score: 0.6952362092376995, threshold: 0.9250000000000009
-
-
-resnetrs50_split3d5x7csn_mixup_ep30/fold1: score: 0.661666662175347, threshold: 0.8962890625000011
-
-####### w/o postprocess ##########
 """
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
