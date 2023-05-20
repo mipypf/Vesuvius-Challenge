@@ -1,69 +1,112 @@
 import argparse
 import datetime
 import warnings
+from functools import partial
 from glob import glob
+from typing import List
 
+import cv2
 import numpy as np
 import PIL.Image as Image
 import pytorch_lightning as pl
 import torch
+from scipy.optimize import minimize
 from torch.nn import functional as F
 from tqdm import tqdm
-from train import (
-    EXP_ID,
-    InkDetDataModule,
-    InkDetLightningModel,
-    fbeta_score,
-    find_threshold_percentile,
-)
+from train import EXP_ID, InkDetDataModule, InkDetLightningModel, fbeta_score
 
 """
-####### w/o postprocess ##########
-resnetrs50_split3d5x7csn_mixup_ep25/fold1: score: 0.6575029309805652, threshold: 0.896093750000001
-resnetrs50_split3d5x7csn_mixup_ep25/fold3: score: 0.6890548603037959, threshold: 0.923925781250001
+####### w/ postprocess ##########
 
-resnetrs50_split3d3x9csn_l6_mixup_ep25/fold1: score: 0.6630090422850091, threshold: 0.8995117187500009
-resnetrs50_split3d3x9csn_l6_mixup_ep25/fold3: score: 0.6952362092376995, threshold: 0.9250000000000009
+####### w/ postprocess ##########
 
-resnetrs50_split3d5x7csn_mixup_ep30/fold1: score: 0.661666662175347, threshold: 0.8962890625000011
-resnetrs50_split3d5x7csn_mixup_ep30/fold2: score: 0.676702739882396, threshold: 0.896484375000001
-resnetrs50_split3d5x7csn_mixup_ep30/fold3: score: 0.6893507333288211, threshold: 0.924218750000001
-resnetrs50_split3d5x7csn_mixup_ep30/fold4: score: 0.7777119023923392, threshold: 0.8797851562500009
-resnetrs50_split3d5x7csn_mixup_ep30/fold5: score: 0.7455737000141693, threshold: 0.8949218750000009
-
-resnetrs50_split3d3x9csn_l6_mixup_ep30/fold1: score: 0.647394759423847, threshold: 0.8941406250000009
-resnetrs50_split3d3x9csn_l6_mixup_ep30/fold2: score: 0.7227190397501271, threshold: 0.897070312500001
-resnetrs50_split3d3x9csn_l6_mixup_ep30/fold3: score: 0.711266574379027, threshold: 0.9267578125000009
-resnetrs50_split3d3x9csn_l6_mixup_ep30/fold4: score: 0.7807569334254353, threshold: 0.877734375000001
-resnetrs50_split3d3x9csn_l6_mixup_ep30/fold5: score: 0.7286967877089129, threshold: 0.893066406250001
-
-convnext_tiny_split3d5x7csn_mixup_ep30/fold1: score: 0.6480484068230761, threshold: 0.8995117187500009
-convnext_tiny_split3d5x7csn_mixup_ep30/fold2: score: 0.7349025767720183, threshold: 0.901367187500001
-convnext_tiny_split3d5x7csn_mixup_ep30/fold3: score: 0.6901466376748603, threshold: 0.930175781250001
-convnext_tiny_split3d5x7csn_mixup_ep30/fold4: score: 0.78872785984954, threshold: 0.874414062500001
-convnext_tiny_split3d5x7csn_mixup_ep30/fold5: score: 0.7579170092311271, threshold: 0.8947265625000009
-
-convnext_tiny_split3d3x9csn_l6_mixup_ep30/fold1: score: 0.6609598722175213, threshold: 0.8945312500000009
-convnext_tiny_split3d3x9csn_l6_mixup_ep30/fold2: score: 0.7103085807166868, threshold: 0.8946289062500009
-convnext_tiny_split3d3x9csn_l6_mixup_ep30/fold3: score: 0.7002801042075558, threshold: 0.933203125000001
-convnext_tiny_split3d3x9csn_l6_mixup_ep30/fold4: score: 0.7907143239234843, threshold: 0.8818359375000009
-convnext_tiny_split3d3x9csn_l6_mixup_ep30/fold5: score: 0.7540930277816693, threshold: 0.893457031250001
-
-swinv2_tiny_window8_256_split3d5x7csn_mixup_ep30/fold1: score: 0.6595671395781149, threshold: 0.894824218750001
-swinv2_tiny_window8_256_split3d5x7csn_mixup_ep30/fold2: score: 0.7202787639366339, threshold: 0.8997070312500011
-swinv2_tiny_window8_256_split3d5x7csn_mixup_ep30/fold3: score: 0.7005961531124031, threshold: 0.9301757812500011
-swinv2_tiny_window8_256_split3d5x7csn_mixup_ep30/fold4: score: 0.7830941383181996, threshold: 0.8788085937500009
-swinv2_tiny_window8_256_split3d5x7csn_mixup_ep30/fold5: score: 0.751246784061386, threshold: 0.897070312500001
-
-swinv2_tiny_window8_256_split3d3x9csn_l6_mixup_ep30/fold1: score: 0.649450337730675, threshold: 0.9015625000000009
-swinv2_tiny_window8_256_split3d3x9csn_l6_mixup_ep30/fold2: score: 0.7385365669462258, threshold: 0.9022460937500009
-swinv2_tiny_window8_256_split3d3x9csn_l6_mixup_ep30/fold3: score: 0.7156696272527835, threshold: 0.9275390625000011
-swinv2_tiny_window8_256_split3d3x9csn_l6_mixup_ep30/fold4: score: 0.7809394070653846, threshold: 0.8765625000000009
-swinv2_tiny_window8_256_split3d3x9csn_l6_mixup_ep30/fold5: score: 0.7565042320219451, threshold: 0.8927734375000009
-
-####### w/o postprocess ##########
 """
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+
+def postprocess(y_pred: np.ndarray, use_area: np.ndarray, t: float):
+    y_pred = (y_pred > np.quantile(use_area, np.clip(t, 0, 1))).astype(int)
+    return y_pred
+
+
+def delete_min_area(y_pred: np.ndarray, t: float):
+    num_component, component = cv2.connectedComponents(y_pred.astype(np.uint8))
+    size_list = np.array([(c == component) for c in range(1, num_component)])
+    size_sum = size_list.sum((1, 2))
+    min_size = np.quantile(size_sum, np.clip(t, 0, 1))
+    y_pred = size_list[size_sum > min_size].sum(0)
+    return y_pred, min_size
+
+
+def find_threshold_percentile(
+    y_true: np.ndarray, y_pred: np.ndarray, use_area: np.ndarray
+):
+    def func_percentile(
+        y_true: np.ndarray, y_pred: np.ndarray, use_area: np.ndarray, t: List[float]
+    ):
+        score = fbeta_score(
+            y_true,
+            postprocess(y_pred, use_area, t[0]),
+            beta=0.5,
+        )
+        return -score
+
+    x0 = [0.5]
+    threshold = minimize(
+        partial(
+            func_percentile,
+            y_true,
+            y_pred,
+            use_area,
+        ),
+        x0,
+        method="nelder-mead",
+    ).x[0]
+    return np.clip(threshold, 0, 1)
+
+
+def find_min_size_percentile(
+    y_true: np.ndarray,
+    y_pred: np.ndarray,
+    use_area: np.ndarray,
+    threshold: np.ndarray,
+):
+    def func_percentile(
+        y_true: np.ndarray,
+        y_pred: np.ndarray,
+        use_area: np.ndarray,
+        t1: float,
+        t2: float,
+    ):
+        y_pred = postprocess(y_pred, use_area, t1)
+
+        score = fbeta_score(
+            y_true,
+            delete_min_area(y_pred, t2)[0],
+            beta=0.5,
+        )
+        return -score
+
+    # min_size = minimize(
+    #     partial(
+    #         func_percentile,
+    #         y_true,
+    #         y_pred,
+    #         use_area,
+    #         threshold,
+    #     ),
+    #     x0,
+    #     method="nelder-mead",
+    # ).x[0]
+
+    best_score = 1e7
+    min_size_per = 0
+    for xi in tqdm(np.arange(0, 1, 0.005)):
+        score = func_percentile(y_true, y_pred, use_area, threshold, xi)
+        if best_score > score:
+            min_size_per = xi
+            best_score = score
+    return np.clip(min_size_per, 0, 1)
 
 
 def get_args() -> argparse.Namespace:
@@ -204,17 +247,34 @@ def main(args):
         count_pix = count_pix > 0
         p_valid *= fragment_mask
         p_valid_tmp = p_valid.reshape(-1)[np.where(count_pix.reshape(-1))]
-        y_valid_tmp = y_valid.reshape(-1)[np.where(count_pix.reshape(-1))]
-        threshold = find_threshold_percentile(y_valid_tmp, p_valid_tmp)
         np.save(f"{logdir}/logits_tta", p_valid)
-        p_valid = p_valid > np.quantile(p_valid_tmp, threshold)
-        score = fbeta_score(y_valid, p_valid, beta=0.5)
-        print(f"{args.logdir}/fold{valid_idx}: score: {score}, threshold: {threshold}")
+        print("Start optimizing top threshold.....")
+        threshold = find_threshold_percentile(y_valid, p_valid, p_valid_tmp)
+        y_pred = postprocess(y_pred=p_valid, use_area=p_valid_tmp, t=threshold)
         np.save(
             f"{logdir}/preds_tta",
-            (p_valid > np.quantile(p_valid_tmp, threshold)).astype(int),
+            y_pred.astype(int),
         )
-        np.save(f"{logdir}/true", y_valid)
+        score = fbeta_score(y_valid, y_pred, beta=0.5)
+        print(f"{args.logdir}/fold{valid_idx}: score: {score}, threshold: {threshold}")
+        print("Finish optimizing top threshold!")
+        print("Start optimizing min_size.....")
+        min_size_per = find_min_size_percentile(
+            y_valid, p_valid, p_valid_tmp, threshold
+        )
+        print("Finish optimizing min_size!")
+        y_pred, min_size = delete_min_area(
+            y_pred=y_pred,
+            t=min_size_per,
+        )
+        score = fbeta_score(y_valid, y_pred, beta=0.5)
+        print(
+            f"{args.logdir}/fold{valid_idx}: score: {score}, threshold: {threshold}, min_size: {min_size_per}({min_size})"
+        )
+        np.save(
+            f"{logdir}/preds_pp",
+            y_pred.astype(int),
+        )
 
 
 if __name__ == "__main__":
