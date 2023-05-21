@@ -12,7 +12,7 @@ from tqdm import tqdm
 from train import (
     EXP_ID,
     InkDetDataModule,
-    InkDetLightningModel,
+    InkDetLightningModel3d,
     fbeta_score,
     find_threshold_percentile,
 )
@@ -74,7 +74,8 @@ def main(args):
         dataloader = InkDetDataModule(
             train_volume_paths=valid_volume_paths,
             valid_volume_paths=valid_volume_paths,
-            image_size=args.image_size,
+            # image_size=args.image_size,
+            image_size=256,
             num_workers=args.num_workers,
             batch_size=args.batch_size,
             preprocess_in_model=True,
@@ -86,7 +87,7 @@ def main(args):
             recursive=True,
         )[0]
         print(f"ckpt_path = {ckpt_path}")
-        model = InkDetLightningModel.load_from_checkpoint(
+        model = InkDetLightningModel3d.load_from_checkpoint(
             ckpt_path,
             valid_fragment_id=valid_idx,
             pretrained=False,
@@ -116,10 +117,10 @@ def main(args):
                     volume[i] = volume[i].flip(2)
                 elif i % len(tta_set) == 3:
                     volume[i] = volume[i].flip(1).flip(2)
-
-            volume = volume.to(device)
+            pad = (256 - args.image_size) // 2
+            volume_new = volume[:, :, pad:-pad, pad:-pad].to(device)
             with torch.no_grad():
-                pred_batch = torch.sigmoid(model.model_ema.module(volume))
+                pred_batch = torch.sigmoid(model.model_ema.module(volume_new))
 
             for i in range(len(pred_batch)):
                 if i % len(tta_set) == 1:
@@ -135,10 +136,14 @@ def main(args):
                 mode="bilinear",
                 align_corners=True,
             ).numpy()
+            pred_batch_new = np.zeros(
+                list(pred_batch.shape[:2]) + list(volume.shape[-2:])
+            )  # [bs, 1] + [w, h]
+            pred_batch_new[:, :, pad:-pad, pad:-pad] = pred_batch
             for xi, yi, pi in zip(
                 x,
                 y,
-                pred_batch,
+                pred_batch_new,
             ):
                 y_lim, x_lim = y_valid[
                     yi * 32 : yi * 32 + volume.shape[-2],
@@ -148,10 +153,12 @@ def main(args):
                     yi * 32 : yi * 32 + volume.shape[-2],
                     xi * 32 : xi * 32 + volume.shape[-1],
                 ] += pi[0, :y_lim, :x_lim]
+                count_pix_single = np.zeros_like(pi[0])
+                count_pix_single[pad:-pad, pad:-pad] = np.ones_like(pred_batch[0][0])
                 count_pix[
                     yi * 32 : yi * 32 + volume.shape[-2],
                     xi * 32 : xi * 32 + volume.shape[-1],
-                ] += np.ones_like(pi[0, :y_lim, :x_lim])
+                ] += count_pix_single[:y_lim, :x_lim]
         fragment_mask = np.array(
             Image.open(
                 f"../../input/vesuvius-challenge-ink-detection-5fold/train/{valid_idx}/mask.png"

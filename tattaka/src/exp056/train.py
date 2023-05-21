@@ -396,6 +396,7 @@ class InkDetResNet3dCSNModel(nn.Module):
         )
         self.in_chans = in_chans
         self.head = nn.Sequential(
+            nn.BatchNorm2d(2048),
             nn.Conv2d(
                 2048,
                 512,
