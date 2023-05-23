@@ -10,7 +10,13 @@ import pytorch_lightning as pl
 import torch
 from torch.nn import functional as F
 from tqdm import tqdm
-from train import EXP_ID, InkDetDataModule, InkDetLightningModel
+from train import (
+    EXP_ID,
+    InkDetDataModule,
+    InkDetLightningModel,
+    fbeta_score,
+    find_threshold_percentile,
+)
 
 """
 """
@@ -74,6 +80,7 @@ def main(args):
         ).test_dataloader()
 
         logdir = f"../../logs/exp{EXP_ID}/{args.logdir}/fold{i}"
+        outdir = f"../../input/oof_5fold/{valid_idx}/exp{EXP_ID}_{args.logdir}"
         ckpt_names = ["best_fbeta.ckpt", "best_fbeta-v1.ckpt", "best_fbeta-v2.ckpt"]
         for ci, ckpt_name in enumerate(ckpt_names):
             ckpt_path = glob(
@@ -157,8 +164,15 @@ def main(args):
             p_valid = np.nan_to_num(p_valid)
             count_pix = count_pix > 0
             p_valid *= fragment_mask
-            os.makedirs(f"{logdir}/oof", exist_ok=True)
-            np.save(f"{logdir}/oof/oof_{ci}", p_valid)
+            p_valid_tmp = p_valid.reshape(-1)[np.where(count_pix.reshape(-1))]
+            y_valid_tmp = y_valid.reshape(-1)[np.where(count_pix.reshape(-1))]
+            threshold = find_threshold_percentile(y_valid_tmp, p_valid_tmp)
+            p_valid = p_valid > np.quantile(p_valid_tmp, threshold)
+            score = fbeta_score(y_valid, p_valid, beta=0.5)
+            os.makedirs(f"{outdir}", exist_ok=True)
+            oof_filename = f"{outdir}/oof_fbeta{ci}"
+            np.save(oof_filename, p_valid)
+            print(f"Save oof:{oof_filename}, score: {score}")
 
 
 if __name__ == "__main__":

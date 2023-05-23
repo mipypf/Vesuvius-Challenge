@@ -19,7 +19,16 @@ from train import (
 
 """
 ####### w/o postprocess ##########
+resnet3d50csnir1x32_mixup_ep30/fold1: score: 0.6524186572454207, threshold: 0.8853515625000008
+resnet3d50csnir1x32_mixup_ep30/fold2: score: 0.7004422933177232, threshold: 0.9150390625000011
+resnet3d50csnir1x32_mixup_ep30/fold3: score: 0.6984930338101688, threshold: 0.920703125000001
+resnet3d50csnir1x32_mixup_ep30/fold4: score: 0.7807893655175185, threshold: 0.8812500000000009
+resnet3d50csnir1x32_mixup_ep30/fold5: score: 0.7365116658692398, threshold: 0.895410156250001
 
+resnet3d152csnir1x24_mixup_ep30/fold1: score: 0.64758106031305, threshold: 0.909570312500001
+resnet3d152csnir1x24_mixup_ep30/fold2: score: 0.7230616127407221, threshold: 0.8920898437500009
+resnet3d152csnir1x24_mixup_ep30/fold3: score: 0.7073637355512794, threshold: 0.9234375000000009
+resnet3d152csnir1x24_mixup_ep30/fold4: score: 0.7832585094124485, threshold: 0.8825195312500009
 ####### w/o postprocess ##########
 """
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

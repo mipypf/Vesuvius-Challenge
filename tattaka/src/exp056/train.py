@@ -419,7 +419,10 @@ class InkDetResNet3dCSNModel(nn.Module):
             load_weights = {
                 "50": {
                     "ir": "../../libs/pretrained/vmz_ircsn_ig65m_pretrained_r50_32x2x1_58e_kinetics400_rgb_20210617-86d33018.pth"
-                }
+                },
+                "152": {
+                    "ir": "../../libs/pretrained/ircsn_ig65m-pretrained-r152_8xb12-32x2x1-58e_kinetics400-rgb_20220811-c7a3cc5b.pth"
+                },
             }
             load_weight = load_weights[depth][bottleneck_mode]
             rank_zero_info(f"load pretrained weight {load_weight}!!!")
@@ -430,7 +433,7 @@ class InkDetResNet3dCSNModel(nn.Module):
                 state_dict, self.state_dict(), exclude=[]
             )  # intersect
             self.load_state_dict(state_dict, strict=False)  # load
-            rank_zero_info(
+            print(
                 "Transferred %g/%g items from %s"
                 % (len(state_dict), len(self.state_dict()), load_weight)
             )  # report
