@@ -29,6 +29,7 @@ resnet3d152csnir1x24_mixup_ep30/fold1: score: 0.64758106031305, threshold: 0.909
 resnet3d152csnir1x24_mixup_ep30/fold2: score: 0.7230616127407221, threshold: 0.8920898437500009
 resnet3d152csnir1x24_mixup_ep30/fold3: score: 0.7073637355512794, threshold: 0.9234375000000009
 resnet3d152csnir1x24_mixup_ep30/fold4: score: 0.7832585094124485, threshold: 0.8825195312500009
+resnet3d152csnir1x24_mixup_ep30/fold5: score: 0.7396405669635763, threshold: 0.8941406250000009
 ####### w/o postprocess ##########
 """
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -127,7 +128,10 @@ def main(args):
                 elif i % len(tta_set) == 3:
                     volume[i] = volume[i].flip(1).flip(2)
             pad = (256 - args.image_size) // 2
-            volume_new = volume[:, :, pad:-pad, pad:-pad].to(device)
+            if pad > 0:
+                volume_new = volume[:, :, pad:-pad, pad:-pad].to(device)
+            else:
+                volume_new = volume.to(device)
             with torch.no_grad():
                 pred_batch = torch.sigmoid(model.model_ema.module(volume_new))
 
@@ -148,7 +152,10 @@ def main(args):
             pred_batch_new = np.zeros(
                 list(pred_batch.shape[:2]) + list(volume.shape[-2:])
             )  # [bs, 1] + [w, h]
-            pred_batch_new[:, :, pad:-pad, pad:-pad] = pred_batch
+            if pad > 0:
+                pred_batch_new[:, :, pad:-pad, pad:-pad] = pred_batch
+            else:
+                pred_batch_new = pred_batch
             for xi, yi, pi in zip(
                 x,
                 y,
@@ -163,7 +170,12 @@ def main(args):
                     xi * 32 : xi * 32 + volume.shape[-1],
                 ] += pi[0, :y_lim, :x_lim]
                 count_pix_single = np.zeros_like(pi[0])
-                count_pix_single[pad:-pad, pad:-pad] = np.ones_like(pred_batch[0][0])
+                if pad > 0:
+                    count_pix_single[pad:-pad, pad:-pad] = np.ones_like(
+                        pred_batch[0][0]
+                    )
+                else:
+                    count_pix_single = np.ones_like(pred_batch[0][0])
                 count_pix[
                     yi * 32 : yi * 32 + volume.shape[-2],
                     xi * 32 : xi * 32 + volume.shape[-1],

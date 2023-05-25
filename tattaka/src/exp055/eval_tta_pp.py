@@ -45,8 +45,6 @@ convnext_tiny_split3d5x7csn_mixup_ep30/fold5: score: 0.7650068226825343, thresho
 convnext_tiny_split3d3x9csn_l6_mixup_ep30/fold1: score: 0.6671244783471034, threshold: 0.8991210937500008, min_size: 0.59(13322.14)
 convnext_tiny_split3d3x9csn_l6_mixup_ep30/fold2: score: 0.7315353598716688, threshold: 0.9003906250000009, min_size: 0.43(15088.25)
 convnext_tiny_split3d3x9csn_l6_mixup_ep30/fold3: score: 0.712144885193615, threshold: 0.931640625000001, min_size: 0.58(13269.399999999998)
-
-
 ####### w/ postprocess ##########
 
 """

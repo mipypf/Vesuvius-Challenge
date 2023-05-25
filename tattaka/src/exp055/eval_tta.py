@@ -61,6 +61,16 @@ swinv2_tiny_window8_256_split3d3x9csn_l6_mixup_ep30/fold3: score: 0.715669627252
 swinv2_tiny_window8_256_split3d3x9csn_l6_mixup_ep30/fold4: score: 0.7809394070653846, threshold: 0.8765625000000009
 swinv2_tiny_window8_256_split3d3x9csn_l6_mixup_ep30/fold5: score: 0.7565042320219451, threshold: 0.8927734375000009
 
+swin_small_patch4_window7_224_split3d5x7csn_mixup_ep30/fold1: score: 0.6437277482361012, threshold: 0.896875000000001
+swin_small_patch4_window7_224_split3d5x7csn_mixup_ep30/fold2: score: 0.7162038860042182, threshold: 0.9078125000000009
+swin_small_patch4_window7_224_split3d5x7csn_mixup_ep30/fold3: score: 0.7027386516443704, threshold: 0.9335937500000011
+swin_small_patch4_window7_224_split3d5x7csn_mixup_ep30/fold4: score: 0.7874930884279626, threshold: 0.8802734375000008
+swin_small_patch4_window7_224_split3d5x7csn_mixup_ep30/fold5: score: 0.7503897114445485, threshold: 0.8921875000000009
+
+swin_small_patch4_window7_224_split3d3x9csn_l6_mixup_ep30/fold1: score: 0.6496851695904378, threshold: 0.8904296875000008
+swin_small_patch4_window7_224_split3d3x9csn_l6_mixup_ep30/fold2: score: 0.729130118069193, threshold: 0.9031250000000008
+swin_small_patch4_window7_224_split3d3x9csn_l6_mixup_ep30/fold3: score: 0.7128404955412003, threshold: 0.927734375000001
+swin_small_patch4_window7_224_split3d3x9csn_l6_mixup_ep30/fold4: score: 0.7789567471724264, threshold: 0.8835937500000008
 ####### w/o postprocess ##########
 """
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -115,7 +125,7 @@ def main(args):
         dataloader = InkDetDataModule(
             train_volume_paths=valid_volume_paths,
             valid_volume_paths=valid_volume_paths,
-            image_size=args.image_size,
+            image_size=256,
             num_workers=args.num_workers,
             batch_size=args.batch_size,
             preprocess_in_model=True,
@@ -157,10 +167,13 @@ def main(args):
                     volume[i] = volume[i].flip(2)
                 elif i % len(tta_set) == 3:
                     volume[i] = volume[i].flip(1).flip(2)
-
-            volume = volume.to(device)
+            pad = (256 - args.image_size) // 2
+            if pad > 0:
+                volume_new = volume[:, :, pad:-pad, pad:-pad].to(device)
+            else:
+                volume_new = volume.to(device)
             with torch.no_grad():
-                pred_batch = torch.sigmoid(model.model_ema.module(volume))
+                pred_batch = torch.sigmoid(model.model_ema.module(volume_new))
 
             for i in range(len(pred_batch)):
                 if i % len(tta_set) == 1:
@@ -176,10 +189,17 @@ def main(args):
                 mode="bilinear",
                 align_corners=True,
             ).numpy()
+            pred_batch_new = np.zeros(
+                list(pred_batch.shape[:2]) + list(volume.shape[-2:])
+            )  # [bs, 1] + [w, h]
+            if pad > 0:
+                pred_batch_new[:, :, pad:-pad, pad:-pad] = pred_batch
+            else:
+                pred_batch_new = pred_batch
             for xi, yi, pi in zip(
                 x,
                 y,
-                pred_batch,
+                pred_batch_new,
             ):
                 y_lim, x_lim = y_valid[
                     yi * 32 : yi * 32 + volume.shape[-2],
@@ -189,10 +209,17 @@ def main(args):
                     yi * 32 : yi * 32 + volume.shape[-2],
                     xi * 32 : xi * 32 + volume.shape[-1],
                 ] += pi[0, :y_lim, :x_lim]
+                count_pix_single = np.zeros_like(pi[0])
+                if pad > 0:
+                    count_pix_single[pad:-pad, pad:-pad] = np.ones_like(
+                        pred_batch[0][0]
+                    )
+                else:
+                    count_pix_single = np.ones_like(pred_batch[0][0])
                 count_pix[
                     yi * 32 : yi * 32 + volume.shape[-2],
                     xi * 32 : xi * 32 + volume.shape[-1],
-                ] += np.ones_like(pi[0, :y_lim, :x_lim])
+                ] += count_pix_single[:y_lim, :x_lim]
         fragment_mask = np.array(
             Image.open(
                 f"../../input/vesuvius-challenge-ink-detection-5fold/train/{valid_idx}/mask.png"

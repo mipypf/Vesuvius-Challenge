@@ -158,3 +158,56 @@ python eval_tta.py --seed 2024 --batch_size 16 --image_size 256 --fold 4 --logdi
 
 
 
+python train.py --seed 9022 --model_name swin_small_patch4_window7_224.ms_in22k_ft_in1k --drop_rate 0.4 --drop_path_rate 0.2 --num_3d_layer 3 --in_chans 5 \
+    --mixup_p 0.5 --mixup_alpha 0.2  --lr 2e-4 --batch_size 12 --image_size 224 --start_z 15 --end_z -15 --shift_z 2 \
+    --fold 0 --gpus 4 --epochs 30 --logdir swin_small_patch4_window7_224_split3d5x7csn_mixup_ep30 --num_workers 6
+python eval_tta.py --seed 2022 --batch_size 16 --image_size 224 --fold 0 --logdir swin_small_patch4_window7_224_split3d5x7csn_mixup_ep30 --num_workers 16
+
+python train.py --seed 9023 --model_name swin_small_patch4_window7_224.ms_in22k_ft_in1k --drop_rate 0.4 --drop_path_rate 0.2 --num_3d_layer 3 --in_chans 5 \
+    --mixup_p 0.5 --mixup_alpha 0.2  --lr 2e-4 --batch_size 12 --image_size 224 --start_z 15 --end_z -15 --shift_z 2 \
+    --fold 1 --gpus 4 --epochs 30 --logdir swin_small_patch4_window7_224_split3d5x7csn_mixup_ep30 --num_workers 6
+python eval_tta.py --seed 2023 --batch_size 16 --image_size 224 --fold 1 --logdir swin_small_patch4_window7_224_split3d5x7csn_mixup_ep30 --num_workers 16
+
+python train.py --seed 9024 --model_name swin_small_patch4_window7_224.ms_in22k_ft_in1k --drop_rate 0.4 --drop_path_rate 0.2 --num_3d_layer 3 --in_chans 5 \
+    --mixup_p 0.5 --mixup_alpha 0.2  --lr 2e-4 --batch_size 12 --image_size 224 --start_z 15 --end_z -15 --shift_z 2 \
+    --fold 2 --gpus 4 --epochs 30 --logdir swin_small_patch4_window7_224_split3d5x7csn_mixup_ep30 --num_workers 6
+python eval_tta.py --seed 2024 --batch_size 16 --image_size 224 --fold 2 --logdir swin_small_patch4_window7_224_split3d5x7csn_mixup_ep30 --num_workers 16
+
+python train.py --seed 9025 --model_name swin_small_patch4_window7_224.ms_in22k_ft_in1k --drop_rate 0.4 --drop_path_rate 0.2 --num_3d_layer 3 --in_chans 5 \
+    --mixup_p 0.5 --mixup_alpha 0.2  --lr 2e-4 --batch_size 12 --image_size 224 --start_z 15 --end_z -15 --shift_z 2 \
+    --fold 3 --gpus 4 --epochs 30 --logdir swin_small_patch4_window7_224_split3d5x7csn_mixup_ep30 --num_workers 6
+python eval_tta.py --seed 2025 --batch_size 16 --image_size 224 --fold 3 --logdir swin_small_patch4_window7_224_split3d5x7csn_mixup_ep30 --num_workers 16
+
+python train.py --seed 9026 --model_name swin_small_patch4_window7_224.ms_in22k_ft_in1k --drop_rate 0.4 --drop_path_rate 0.2 --num_3d_layer 3 --in_chans 5 \
+    --mixup_p 0.5 --mixup_alpha 0.2  --lr 2e-4 --batch_size 12 --image_size 224 --start_z 15 --end_z -15 --shift_z 2 \
+    --fold 4 --gpus 4 --epochs 30 --logdir swin_small_patch4_window7_224_split3d5x7csn_mixup_ep30 --num_workers 6
+python eval_tta.py --seed 2026 --batch_size 16 --image_size 224 --fold 4 --logdir swin_small_patch4_window7_224_split3d5x7csn_mixup_ep30 --num_workers 16
+
+
+python train.py --seed 10022 --model_name swin_small_patch4_window7_224.ms_in22k_ft_in1k --drop_rate 0.4 --drop_path_rate 0.2 --num_3d_layer 6 --in_chans 3 \
+    --mixup_p 0.5 --mixup_alpha 0.2  --lr 2e-4 --batch_size 12 --image_size 224 --start_z 19 --end_z -19 --shift_z 2 \
+    --fold 0 --gpus 4 --epochs 30 --logdir swin_small_patch4_window7_224_split3d3x9csn_l6_mixup_ep30 --num_workers 6
+python eval_tta.py --seed 2022 --batch_size 16 --image_size 224 --fold 0 --logdir swin_small_patch4_window7_224_split3d3x9csn_l6_mixup_ep30 --num_workers 16
+
+python train.py --seed 10023 --model_name swin_small_patch4_window7_224.ms_in22k_ft_in1k --drop_rate 0.4 --drop_path_rate 0.2 --num_3d_layer 6 --in_chans 3 \
+    --mixup_p 0.5 --mixup_alpha 0.2  --lr 2e-4 --batch_size 12 --image_size 224 --start_z 19 --end_z -19 --shift_z 2 \
+    --fold 1 --gpus 4 --epochs 30 --logdir swin_small_patch4_window7_224_split3d3x9csn_l6_mixup_ep30 --num_workers 6
+python eval_tta.py --seed 2024 --batch_size 16 --image_size 224 --fold 1 --logdir swin_small_patch4_window7_224_split3d3x9csn_l6_mixup_ep30 --num_workers 16
+
+python train.py --seed 10024 --model_name swin_small_patch4_window7_224.ms_in22k_ft_in1k --drop_rate 0.4 --drop_path_rate 0.2 --num_3d_layer 6 --in_chans 3 \
+    --mixup_p 0.5 --mixup_alpha 0.2  --lr 2e-4 --batch_size 12 --image_size 224 --start_z 19 --end_z -19 --shift_z 2 \
+    --fold 2 --gpus 4 --epochs 30 --logdir swin_small_patch4_window7_224_split3d3x9csn_l6_mixup_ep30 --num_workers 6
+python eval_tta.py --seed 2024 --batch_size 16 --image_size 224 --fold 2 --logdir swin_small_patch4_window7_224_split3d3x9csn_l6_mixup_ep30 --num_workers 16
+
+python train.py --seed 10025 --model_name swin_small_patch4_window7_224.ms_in22k_ft_in1k --drop_rate 0.4 --drop_path_rate 0.2 --num_3d_layer 6 --in_chans 3 \
+    --mixup_p 0.5 --mixup_alpha 0.2  --lr 2e-4 --batch_size 12 --image_size 224 --start_z 19 --end_z -19 --shift_z 2 \
+    --fold 3 --gpus 4 --epochs 30 --logdir swin_small_patch4_window7_224_split3d3x9csn_l6_mixup_ep30 --num_workers 6
+python eval_tta.py --seed 2024 --batch_size 16 --image_size 224 --fold 3 --logdir swin_small_patch4_window7_224_split3d3x9csn_l6_mixup_ep30 --num_workers 16
+
+python train.py --seed 10026 --model_name swin_small_patch4_window7_224.ms_in22k_ft_in1k --drop_rate 0.4 --drop_path_rate 0.2 --num_3d_layer 6 --in_chans 3 \
+    --mixup_p 0.5 --mixup_alpha 0.2  --lr 2e-4 --batch_size 12 --image_size 224 --start_z 19 --end_z -19 --shift_z 2 \
+    --fold 4 --gpus 4 --epochs 30 --logdir swin_small_patch4_window7_224_split3d3x9csn_l6_mixup_ep30 --num_workers 6
+python eval_tta.py --seed 2024 --batch_size 16 --image_size 224 --fold 4 --logdir swin_small_patch4_window7_224_split3d3x9csn_l6_mixup_ep30 --num_workers 16
+
+
+
