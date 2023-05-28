@@ -81,7 +81,7 @@ python eval_tta.py --seed 2026 --batch_size 16 --image_size 256 --fold 4 --logdi
 
 python train.py --seed 5022 --model_name convnext_tiny.fb_in1k --drop_rate 0.4 --drop_path_rate 0.2 --num_3d_layer 6 --in_chans 3 \
     --mixup_p 0.5 --mixup_alpha 0.2  --lr 1e-3  --batch_size 16 --image_size 256 --start_z 19 --end_z -19 --shift_z 2 \
-    --fold 0 --gpus 4 --epochs 30 --logdir convnext_tiny_split3d3x9csn_l6_mixup_ep30 --num_workers 6
+    --fold 0 --gpus 4 --epochs 30 --logdir   --num_workers 6
 python eval_tta.py --seed 2022 --batch_size 16 --image_size 256 --fold 0 --logdir convnext_tiny_split3d3x9csn_l6_mixup_ep30 --num_workers 16
 
 python train.py --seed 5023 --model_name convnext_tiny.fb_in1k --drop_rate 0.4 --drop_path_rate 0.2 --num_3d_layer 6 --in_chans 3 \
@@ -211,3 +211,54 @@ python eval_tta.py --seed 2024 --batch_size 16 --image_size 224 --fold 4 --logdi
 
 
 
+python train.py --seed 11022 --model_name ecaresnet26t.ra2_in1k --drop_rate 0.4 --drop_path_rate 0.2 --num_3d_layer 6 --in_chans 3 \
+    --mixup_p 0.5 --mixup_alpha 0.2 --lr 1e-3  --batch_size 16 --image_size 256 --start_z 14 --end_z -15 --shift_z 2 \
+    --fold 0 --gpus 4 --epochs 30 --logdir ecaresnet26t_split3d3x12csn_l6_mixup_ep30 --num_workers 6
+python eval_tta_fp16.py --seed 11022 --batch_size 16 --image_size 256 --fold 0 --logdir ecaresnet26t_split3d3x12csn_l6_mixup_ep30  --num_workers 16
+
+python train.py --seed 11027 --model_name ecaresnet26t.ra2_in1k --drop_rate 0.4 --drop_path_rate 0.2 --num_3d_layer 6 --in_chans 3 \
+    --mixup_p 0.5 --mixup_alpha 0.2 --lr 1e-3  --batch_size 16 --image_size 256 --start_z 14 --end_z -15 --shift_z 2 \
+    --fold 1 --gpus 4 --epochs 30 --logdir ecaresnet26t_split3d3x12csn_l6_mixup_ep30  --num_workers 6
+python eval_tta_fp16.py --seed 11022 --batch_size 16 --image_size 256 --fold 1 --logdir ecaresnet26t_split3d3x12csn_l6_mixup_ep30  --num_workers 16
+
+python train.py --seed 11024 --model_name ecaresnet26t.ra2_in1k --drop_rate 0.4 --drop_path_rate 0.2 --num_3d_layer 6 --in_chans 3 \
+    --mixup_p 0.5 --mixup_alpha 0.2 --lr 1e-3   --batch_size 16 --image_size 256 --start_z 14 --end_z -15 --shift_z 2 \
+    --fold 2 --gpus 4 --epochs 30 --logdir ecaresnet26t_split3d3x12csn_l6_mixup_ep30  --num_workers 6
+python eval_tta_fp16.py --seed 11024 --batch_size 16 --image_size 256 --fold 2 --logdir ecaresnet26t_split3d3x12csn_l6_mixup_ep30  --num_workers 16
+
+python train.py --seed 11025 --model_name ecaresnet26t.ra2_in1k --drop_rate 0.4 --drop_path_rate 0.2 --num_3d_layer 6 --in_chans 3 \
+    --mixup_p 0.5 --mixup_alpha 0.2 --lr 1e-3  --batch_size 16 --image_size 256 --start_z 14 --end_z -15 --shift_z 2 \
+    --fold 3 --gpus 4 --epochs 30 --logdir ecaresnet26t_split3d3x12csn_l6_mixup_ep30  --num_workers 6
+python eval_tta_fp16.py --seed 11025 --batch_size 16 --image_size 256 --fold 3 --logdir ecaresnet26t_split3d3x12csn_l6_mixup_ep30  --num_workers 16
+
+python train.py --seed 11026 --model_name ecaresnet26t.ra2_in1k --drop_rate 0.4 --drop_path_rate 0.2 --num_3d_layer 6 --in_chans 3 \
+    --mixup_p 0.5 --mixup_alpha 0.2 --lr 1e-3  --batch_size 16 --image_size 256 --start_z 14 --end_z -15 --shift_z 2 \
+    --fold 4 --gpus 4 --epochs 30 --logdir ecaresnet26t_split3d3x12csn_l6_mixup_ep30  --num_workers 6
+python eval_tta_fp16.py --seed 11026 --batch_size 16 --image_size 256 --fold 4 --logdir ecaresnet26t_split3d3x12csn_l6_mixup_ep30  --num_workers 16
+
+
+
+python train.py --seed 12022 --model_name ecaresnet26t.ra2_in1k --drop_rate 0.4 --drop_path_rate 0.2 --num_3d_layer 6 --in_chans 2 \
+    --mixup_p 0.5 --mixup_alpha 0.2 --lr 1e-3  --batch_size 16 --image_size 224 --start_z 17 --end_z -18 --shift_z 2 \
+    --fold 0 --gpus 4 --epochs 30 --logdir ecaresnet26t_split3d2x15csn_l6_mixup_ep30 --num_workers 6
+python eval_tta_fp16.py --seed 2022 --batch_size 16 --image_size 224 --fold 0 --logdir ecaresnet26t_split3d2x15csn_l6_mixup_ep30 --num_workers 16
+
+python train.py --seed 12023 --model_name ecaresnet26t.ra2_in1k --drop_rate 0.4 --drop_path_rate 0.2 --num_3d_layer 6 --in_chans 2 \
+    --mixup_p 0.5 --mixup_alpha 0.2 --lr 1e-3  --batch_size 16 --image_size 224 --start_z 17 --end_z -18 --shift_z 2 \
+    --fold 1 --gpus 4 --epochs 30 --logdir ecaresnet26t_split3d2x15csn_l6_mixup_ep30 --num_workers 6
+python eval_tta_fp16.py --seed 2023 --batch_size 16 --image_size 224 --fold 1 --logdir ecaresnet26t_split3d2x15csn_l6_mixup_ep30 --num_workers 16
+
+python train.py --seed 12024 --model_name ecaresnet26t.ra2_in1k --drop_rate 0.4 --drop_path_rate 0.2 --num_3d_layer 6 --in_chans 2 \
+    --mixup_p 0.5 --mixup_alpha 0.2 --lr 1e-3  --batch_size 16 --image_size 224 --start_z 17 --end_z -18 --shift_z 2 \
+    --fold 2 --gpus 4 --epochs 30 --logdir ecaresnet26t_split3d2x15csn_l6_mixup_ep30 --num_workers 6
+python eval_tta_fp16.py --seed 2024 --batch_size 16 --image_size 224 --fold 2 --logdir ecaresnet26t_split3d2x15csn_l6_mixup_ep30 --num_workers 16
+
+python train.py --seed 12025 --model_name ecaresnet26t.ra2_in1k --drop_rate 0.4 --drop_path_rate 0.2 --num_3d_layer 6 --in_chans 2 \
+    --mixup_p 0.5 --mixup_alpha 0.2 --lr 1e-3  --batch_size 16 --image_size 224 --start_z 17 --end_z -18 --shift_z 2 \
+    --fold 3 --gpus 4 --epochs 30 --logdir ecaresnet26t_split3d2x15csn_l6_mixup_ep30 --num_workers 6
+python eval_tta_fp16.py --seed 2025 --batch_size 16 --image_size 224 --fold 3 --logdir ecaresnet26t_split3d2x15csn_l6_mixup_ep30 --num_workers 16
+
+python train.py --seed 12026 --model_name ecaresnet26t.ra2_in1k --drop_rate 0.4 --drop_path_rate 0.2 --num_3d_layer 6 --in_chans 2 \
+    --mixup_p 0.5 --mixup_alpha 0.2 --lr 1e-3  --batch_size 16 --image_size 224 --start_z 17 --end_z -18 --shift_z 2 \
+    --fold 4 --gpus 4 --epochs 30 --logdir ecaresnet26t_split3d2x15csn_l6_mixup_ep30 --num_workers 6
+python eval_tta_fp16.py --seed 3026 --batch_size 16 --image_size 224 --fold 4 --logdir ecaresnet26t_split3d2x15csn_l6_mixup_ep30 --num_workers 16

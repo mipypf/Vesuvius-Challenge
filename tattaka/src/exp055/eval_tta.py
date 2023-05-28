@@ -71,6 +71,7 @@ swin_small_patch4_window7_224_split3d3x9csn_l6_mixup_ep30/fold1: score: 0.649685
 swin_small_patch4_window7_224_split3d3x9csn_l6_mixup_ep30/fold2: score: 0.729130118069193, threshold: 0.9031250000000008
 swin_small_patch4_window7_224_split3d3x9csn_l6_mixup_ep30/fold3: score: 0.7128404955412003, threshold: 0.927734375000001
 swin_small_patch4_window7_224_split3d3x9csn_l6_mixup_ep30/fold4: score: 0.7789567471724264, threshold: 0.8835937500000008
+swin_small_patch4_window7_224_split3d3x9csn_l6_mixup_ep30/fold5: score: 0.744586553834456, threshold: 0.8955078125000009
 ####### w/o postprocess ##########
 """
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
