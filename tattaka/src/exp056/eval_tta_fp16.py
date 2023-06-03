@@ -30,6 +30,7 @@ resnet3d152csnir1x24_mixup_ep30/fold2: score: 0.7275147505570198, threshold: 0.8
 resnet3d152csnir1x24_mixup_ep30/fold3: score: 0.7139278750354907, threshold: 0.925097656250001
 resnet3d152csnir1x24_mixup_ep30/fold4: score: 0.7900112110659766, threshold: 0.8844726562500008
 resnet3d152csnir1x24_mixup_ep30/fold5: score: 0.7374516137096395, threshold: 0.893359375000001
+
 ####### w/o postprocess ##########
 """
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

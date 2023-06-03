@@ -12,72 +12,16 @@ from tqdm import tqdm
 from train import (
     EXP_ID,
     InkDetDataModule,
-    InkDetLightningModel,
+    InkDetLightningModelMS,
     fbeta_score,
     find_threshold_percentile,
 )
 
 """
 ####### w/o postprocess ##########
-resnetrs50_split3d5x7csn_mixup_ep30/fold1: score: 0.6616110924110317, threshold: 0.896289062500001
-resnetrs50_split3d5x7csn_mixup_ep30/fold2: score: 0.6766739264738048, threshold: 0.896582031250001
-resnetrs50_split3d5x7csn_mixup_ep30/fold3: score: 0.6893144750045893, threshold: 0.924218750000001
-resnetrs50_split3d5x7csn_mixup_ep30/fold4: score: 0.7776853733102816, threshold: 0.8797851562500009
-resnetrs50_split3d5x7csn_mixup_ep30/fold5: score: 0.7456068233518977, threshold: 0.894921875000001
-
-resnetrs50_split3d3x9csn_l6_mixup_ep30/fold1: score: 0.6475739401506333, threshold: 0.8937500000000009
-resnetrs50_split3d3x9csn_l6_mixup_ep30/fold2: score: 0.7226838982914648, threshold: 0.8966796875000009
-resnetrs50_split3d3x9csn_l6_mixup_ep30/fold3: score: 0.7112823609332312, threshold: 0.9267578125000009
-resnetrs50_split3d3x9csn_l6_mixup_ep30/fold4: score: 0.7807499937074391, threshold: 0.8776367187500009
-resnetrs50_split3d3x9csn_l6_mixup_ep30/fold5: score: 0.7287241432138931, threshold: 0.8927734375000009
-
-convnext_tiny_split3d5x7csn_mixup_ep30/fold1: score: 0.6480399318093204, threshold: 0.8992187500000008
-convnext_tiny_split3d5x7csn_mixup_ep30/fold2: score: 0.7349395208454771, threshold: 0.901367187500001
-convnext_tiny_split3d5x7csn_mixup_ep30/fold3: score: 0.6900721993798925, threshold: 0.930175781250001
-convnext_tiny_split3d5x7csn_mixup_ep30/fold4: score: 0.7887197902193216, threshold: 0.8742187500000009
-convnext_tiny_split3d5x7csn_mixup_ep30/fold5: score: 0.7579462384855769, threshold: 0.8944335937500009
-
-convnext_tiny_split3d3x9csn_l6_mixup_ep30/fold1: score: 0.6609206181251918, threshold: 0.8943359375000008
-convnext_tiny_split3d3x9csn_l6_mixup_ep30/fold2: score: 0.7103011197961271, threshold: 0.8947265625000009
-convnext_tiny_split3d3x9csn_l6_mixup_ep30/fold3: score: 0.7002915696210247, threshold: 0.933105468750001
-convnext_tiny_split3d3x9csn_l6_mixup_ep30/fold4: score: 0.7907009230776294, threshold: 0.8817382812500009
-convnext_tiny_split3d3x9csn_l6_mixup_ep30/fold5: score: 0.754126946565578, threshold: 0.893652343750001
-
-swinv2_tiny_window8_256_split3d5x7csn_mixup_ep30/fold1: score: 0.659608109675679, threshold: 0.895117187500001
-swinv2_tiny_window8_256_split3d5x7csn_mixup_ep30/fold2: score: 0.7202747225205692, threshold: 0.8996093750000009
-swinv2_tiny_window8_256_split3d5x7csn_mixup_ep30/fold3: score: 0.7005684116948904, threshold: 0.930078125000001
-swinv2_tiny_window8_256_split3d5x7csn_mixup_ep30/fold4: score: 0.7830606810622647, threshold: 0.8776367187500009
-swinv2_tiny_window8_256_split3d5x7csn_mixup_ep30/fold5: score: 0.7512288835151714, threshold: 0.8962890625000011
-
-swinv2_tiny_window8_256_split3d3x9csn_l6_mixup_ep30/fold1: score: 0.6493931321137051, threshold: 0.901953125000001
-swinv2_tiny_window8_256_split3d3x9csn_l6_mixup_ep30/fold2: score: 0.7385469428581766, threshold: 0.9033203125000009
-swinv2_tiny_window8_256_split3d3x9csn_l6_mixup_ep30/fold3: score: 0.7156795923483393, threshold: 0.9275390625000011
-swinv2_tiny_window8_256_split3d3x9csn_l6_mixup_ep30/fold4: score: 0.7809338279543435, threshold: 0.8759765625000009
-swinv2_tiny_window8_256_split3d3x9csn_l6_mixup_ep30/fold5: score: 0.7565529723487409, threshold: 0.892968750000001
-
-swin_small_patch4_window7_224_split3d5x7csn_mixup_ep30/fold1: score: 0.6437059820900941, threshold: 0.897265625000001
-swin_small_patch4_window7_224_split3d5x7csn_mixup_ep30/fold2: score: 0.71618750126515, threshold: 0.9080078125000008
-swin_small_patch4_window7_224_split3d5x7csn_mixup_ep30/fold3: score: 0.7027046768758832, threshold: 0.9335937500000011
-swin_small_patch4_window7_224_split3d5x7csn_mixup_ep30/fold4: score: 0.7875062126996014, threshold: 0.8806640625000008
-swin_small_patch4_window7_224_split3d5x7csn_mixup_ep30/fold5: score: 0.7503830381292295, threshold: 0.891992187500001
-
-swin_small_patch4_window7_224_split3d3x9csn_l6_mixup_ep30/fold1: score: 0.6496681029059532, threshold: 0.8906250000000009
-swin_small_patch4_window7_224_split3d3x9csn_l6_mixup_ep30/fold2: score: 0.7291322700543125, threshold: 0.9031250000000008
-swin_small_patch4_window7_224_split3d3x9csn_l6_mixup_ep30/fold3: score: 0.712814220702011, threshold: 0.927246093750001
-swin_small_patch4_window7_224_split3d3x9csn_l6_mixup_ep30/fold4: score: 0.7789634391449469, threshold: 0.8833007812500008
-swin_small_patch4_window7_224_split3d3x9csn_l6_mixup_ep30/fold5: score: 0.7445987861438901, threshold: 0.8957031250000009
-
-ecaresnet26t_split3d3x12csn_l6_mixup_ep30/fold1: score: 0.6603261574289282, threshold: 0.901171875000001
-ecaresnet26t_split3d3x12csn_l6_mixup_ep30/fold2: score: 0.7171293914568536, threshold: 0.9043945312500009
-ecaresnet26t_split3d3x12csn_l6_mixup_ep30/fold3: score: 0.707478648308418, threshold: 0.9236328125000008
-ecaresnet26t_split3d3x12csn_l6_mixup_ep30/fold4: score: 0.7661473342651401, threshold: 0.8882812500000008
-ecaresnet26t_split3d3x12csn_l6_mixup_ep30/fold5: score: 0.742328060126813, threshold: 0.8926757812500009
-
-ecaresnet26t_split3d2x15csn_l6_mixup_ep30/fold1: score: 0.6380428298638421, threshold: 0.9005859375000009
-ecaresnet26t_split3d2x15csn_l6_mixup_ep30/fold2: score: 0.6968389137485008, threshold: 0.9002929687500009
-ecaresnet26t_split3d2x15csn_l6_mixup_ep30/fold3: score: 0.6990990836925484, threshold: 0.929980468750001
-ecaresnet26t_split3d2x15csn_l6_mixup_ep30/fold4: score: 0.7599457538682646, threshold: 0.8794921875000008
-ecaresnet26t_split3d2x15csn_l6_mixup_ep30/fold5: score: 0.7311242069813252, threshold: 0.8962890625000011
+resnetrs50_split3d5x7csn_mixup_ep30/fold1: score: 0.6719876604166287, threshold: 0.8943359375000008
+resnetrs50_split3d5x7csn_mixup_ep30/fold2: score: 0.6784813687640244, threshold: 0.8937500000000009
+resnetrs50_split3d5x7csn_mixup_ep30/fold3: score: 0.7091705916844678, threshold: 0.9264648437500009
 ####### w/o postprocess ##########
 """
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -145,7 +89,7 @@ def main(args):
             recursive=True,
         )[0]
         print(f"ckpt_path = {ckpt_path}")
-        model = InkDetLightningModel.load_from_checkpoint(
+        model = InkDetLightningModelMS.load_from_checkpoint(
             ckpt_path,
             valid_fragment_id=valid_idx,
             pretrained=False,

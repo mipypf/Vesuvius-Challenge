@@ -19,6 +19,45 @@ from train import (
 )
 
 """
+Save oof:../../input/oof_5fold/fold0/exp056_resnet3d50csnir1x32_mixup_ep30/oof_fbeta0, score: 0.652337684867544
+Save oof:../../input/oof_5fold/fold0/exp056_resnet3d50csnir1x32_mixup_ep30/oof_fbeta1, score: 0.6483244750803562
+Save oof:../../input/oof_5fold/fold0/exp056_resnet3d50csnir1x32_mixup_ep30/oof_fbeta2, score: 0.6434359399047448
+
+Save oof:../../input/oof_5fold/fold1/exp056_resnet3d50csnir1x32_mixup_ep30/oof_fbeta0, score: 0.7004049381518501
+Save oof:../../input/oof_5fold/fold1/exp056_resnet3d50csnir1x32_mixup_ep30/oof_fbeta1, score: 0.7091866758224828
+Save oof:../../input/oof_5fold/fold1/exp056_resnet3d50csnir1x32_mixup_ep30/oof_fbeta2, score: 0.7158663276482233
+
+Save oof:../../input/oof_5fold/fold2/exp056_resnet3d50csnir1x32_mixup_ep30/oof_fbeta0, score: 0.6985949376703707
+Save oof:../../input/oof_5fold/fold2/exp056_resnet3d50csnir1x32_mixup_ep30/oof_fbeta1, score: 0.6778507668651681
+Save oof:../../input/oof_5fold/fold2/exp056_resnet3d50csnir1x32_mixup_ep30/oof_fbeta2, score: 0.6863111755647392
+
+Save oof:../../input/oof_5fold/fold3/exp056_resnet3d50csnir1x32_mixup_ep30/oof_fbeta0, score: 0.7807912449768651
+Save oof:../../input/oof_5fold/fold3/exp056_resnet3d50csnir1x32_mixup_ep30/oof_fbeta1, score: 0.7745004989858749
+Save oof:../../input/oof_5fold/fold3/exp056_resnet3d50csnir1x32_mixup_ep30/oof_fbeta2, score: 0.7744453954130045
+
+Save oof:../../input/oof_5fold/fold4/exp056_resnet3d50csnir1x32_mixup_ep30/oof_fbeta0, score: 0.7364386200206916
+Save oof:../../input/oof_5fold/fold4/exp056_resnet3d50csnir1x32_mixup_ep30/oof_fbeta1, score: 0.7366602716067701
+Save oof:../../input/oof_5fold/fold4/exp056_resnet3d50csnir1x32_mixup_ep30/oof_fbeta2, score: 0.7374671018828416
+
+Save oof:../../input/oof_5fold/fold0/exp056_resnet3d152csnir1x24_mixup_ep30/oof_fbeta0, score: 0.6601534242104694
+Save oof:../../input/oof_5fold/fold0/exp056_resnet3d152csnir1x24_mixup_ep30/oof_fbeta1, score: 0.6687681872440032
+Save oof:../../input/oof_5fold/fold0/exp056_resnet3d152csnir1x24_mixup_ep30/oof_fbeta2, score: 0.6682966954068926
+
+Save oof:../../input/oof_5fold/fold1/exp056_resnet3d152csnir1x24_mixup_ep30/oof_fbeta0, score: 0.7275147505570198
+Save oof:../../input/oof_5fold/fold1/exp056_resnet3d152csnir1x24_mixup_ep30/oof_fbeta1, score: 0.712826518576818
+Save oof:../../input/oof_5fold/fold1/exp056_resnet3d152csnir1x24_mixup_ep30/oof_fbeta2, score: 0.7230557633882554
+
+Save oof:../../input/oof_5fold/fold2/exp056_resnet3d152csnir1x24_mixup_ep30/oof_fbeta0, score: 0.7139278750354907
+Save oof:../../input/oof_5fold/fold2/exp056_resnet3d152csnir1x24_mixup_ep30/oof_fbeta1, score: 0.7164966561320503
+Save oof:../../input/oof_5fold/fold2/exp056_resnet3d152csnir1x24_mixup_ep30/oof_fbeta2, score: 0.7074708878842065
+
+Save oof:../../input/oof_5fold/fold3/exp056_resnet3d152csnir1x24_mixup_ep30/oof_fbeta0, score: 0.7900112110659766
+Save oof:../../input/oof_5fold/fold3/exp056_resnet3d152csnir1x24_mixup_ep30/oof_fbeta1, score: 0.7875282652797595
+Save oof:../../input/oof_5fold/fold3/exp056_resnet3d152csnir1x24_mixup_ep30/oof_fbeta2, score: 0.7878822720044134
+
+Save oof:../../input/oof_5fold/fold4/exp056_resnet3d152csnir1x24_mixup_ep30/oof_fbeta0, score: 0.7374516137096395
+Save oof:../../input/oof_5fold/fold4/exp056_resnet3d152csnir1x24_mixup_ep30/oof_fbeta1, score: 0.7335828511801267
+Save oof:../../input/oof_5fold/fold4/exp056_resnet3d152csnir1x24_mixup_ep30/oof_fbeta2, score: 0.7511151925252675
 """
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
