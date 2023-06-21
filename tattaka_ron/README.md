@@ -1,10 +1,7 @@
 # tattaka&ron part solution
 
 ## 1. INSTALLATION
-The requirements.txt file should list all Python libraries:
-```
-pip install -r requirements.txt
-```
+Use [Kaggle Docker v128](https://console.cloud.google.com/gcr/images/kaggle-gpu-images/GLOBAL/python). Then install the missing packages according to the requiement.txt.
 ## 2. DATA
 
 Place competition data as follows:
@@ -15,11 +12,13 @@ input
 ## 3. PREPROCESSING
 Please do the following:
 ```
-python tattaka_ron/input/split_fragment2.py
+cd Vesuvius-Challenge/tattaka_ron/input
+python split_fragment2.py
 ```
 Next:
 ```
-tattaka_ron/input/make_patch_32_5fold.py
+cd Vesuvius-Challenge/tattaka_ron/input
+python make_patch_32_5fold.py
 ```
 The directory structure will be as follows:
 <pre>
@@ -46,11 +45,13 @@ input
 ## 4. TRAINING
 Please do the following:
 ```
-sh tattaka_ron/src/exp055/train.sh
+cd Vesuvius-Challenge/tattaka_ron/src/exp055
+sh train.sh
 ```
 Next:
 ```
-sh tattaka_ron/src/exp056/train.sh
+cd Vesuvius-Challenge/tattaka_ron/src/exp056
+sh train.sh
 ```
 ## 5. INFERENCE
 Actual inference notebook:
