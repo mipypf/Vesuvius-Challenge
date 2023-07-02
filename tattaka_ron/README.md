@@ -1,7 +1,8 @@
 # tattaka&ron part solution
 
 ## 1. INSTALLATION
-Use [Kaggle Docker v128](https://console.cloud.google.com/gcr/images/kaggle-gpu-images/GLOBAL/python). Then install the missing packages according to the requiement.txt.
+Use [Kaggle Docker v128](https://console.cloud.google.com/gcr/images/kaggle-gpu-images/GLOBAL/python). Then install the missing packages according to the requiement.txt. The whl file around mmdetection-offline-lib in the requiement.txt can be obtained from the following URL
+<https://www.kaggle.com/datasets/nvnnghia/mmdetection-offline-lib>
 ## 2. DATA
 
 Place competition data as follows:
