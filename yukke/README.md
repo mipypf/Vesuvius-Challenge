@@ -14,7 +14,7 @@ Build a docker image.
 
 ```shell
 make build-docker
-pipx install git+https://github.com/sloretz/off-your-rocker --include-deps
+pip install git+https://github.com/sloretz/off-your-rocker --include-deps
 ```
 
 Download data from [the competition page](https://www.kaggle.com/competitions/vesuvius-challenge-ink-detection/overview).
@@ -56,7 +56,13 @@ python -m inkdet.tools.preprocess
 train <CONFIG_PATH>
 ```
 
-Run shell scripts in the `scripts` directory to train models for the submission.
+Run shell scripts of the `scripts` directory in the current directory to train models for the submission.
+
+### Inference
+
+inference notebook: <https://www.kaggle.com/code/yukke42/inkdet-ensemble-tattaka-ron-yukke42-only-yukke42>
+
+Upload checkpoints in the `work_dirs` and update the path of `YUKKE_MODEL_CFGS` in the notebook to the checkpoints you want to use.
 
 ### Reference
 
