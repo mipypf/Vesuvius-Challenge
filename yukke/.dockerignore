@@ -1,0 +1,8 @@
+# mmseg
+/data
+/work_dirs.*
+/notebooks
+*.pth
+*.png
+*.npy
+*.ts

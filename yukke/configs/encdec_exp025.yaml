@@ -1,0 +1,93 @@
+# data
+start_channels: 24
+in_channels: 16
+patch_size: 224
+stride: 112
+batch_size: 16
+norm_mean: 0.45
+norm_std: 0.225
+float32_matmul_precision: high
+
+use_mask: true
+mix_augmentation_p: 0.5
+mix_augmentation_alpha: 0.2
+# ref: https://www.kaggle.com/competitions/hubmap-kidney-segmentation/discussion/238013
+train_augmentations:
+  # replacement of grid_cutout
+  - type: OneOf
+    p: 0.5
+    transforms:
+      - type: CoarseDropout
+        max_holes: 1
+        max_width: 32
+        max_height: 32
+        mask_fill_value: 0
+      - type: CoarseDropout
+        max_holes: 1
+        max_width: 32
+        max_height: 64
+        mask_fill_value: 0
+      - type: CoarseDropout
+        max_holes: 1
+        max_width: 64
+        max_height: 32
+        mask_fill_value: 0
+      - type: CoarseDropout
+        max_holes: 1
+        max_width: 64
+        max_height: 64
+        mask_fill_value: 0
+  - type: HorizontalFlip
+    p: 0.5
+  - type: VerticalFlip
+    p: 0.5
+  - type: RandomRotate90
+    p: 0.9
+  - type: ShiftScaleRotate
+    p: 0.9
+    scale_limit: 0.2
+    rotate_limit: 15
+    border_mode: 2 # cv2.BORDER_REFLECT_101
+  - type: OneOf
+    p: 0.9
+    transforms:
+      - type: ElasticTransform
+        p: 0.3
+      - type: GaussianBlur
+        p: 0.3
+      - type: GaussNoise
+        p: 0.3
+      - type: OpticalDistortion
+        p: 0.3
+      - type: GridDistortion
+        p: 0.1
+      - type: PiecewiseAffine
+        p: 0.3
+  - type: RandomBrightnessContrast
+    p: 0.3
+    brightness_limit: 0.3
+    contrast_limit: 0.3
+
+# model
+model_name: EncDec
+encoder_name: mvit_v2_s
+model_params:
+  normalize_image: true
+  decoder_type: mlp
+  decoder_patch_expand_channel_scale: 1
+  decoder_logit_interpolate_upscale_factor: 1
+  decoder_downsample_factor: 4
+losses:
+  - type: SoftBCEWithLogitsLoss
+    smooth_factor: 0.1
+  - type: FBetaLoss
+
+head_init_weights: xavier_uniform_
+head_init_bias: 0.0
+
+# optimizer
+epochs: 30
+optimizer_name: AdamW
+optimizer_params:
+  weight_decay: 0.0001 # 1e-4
+scheduler_name: GradualWarmupSchedulerV2
